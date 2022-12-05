@@ -54,9 +54,11 @@ class Day5SupplyStack {
                             val stackSender = it[i].digitToInt()
                             i += 5
                             val stackReceiver = it[i].digitToInt()
+                            val items = mutableListOf<Char>()
                             repeat(itemsToMove) {
-                                stacks[stackReceiver - 1].push(stacks[stackSender - 1].pop())
+                                items.add(stacks[stackSender - 1].pop())
                             }
+                            stacks[stackReceiver - 1].addAll(items.reversed())
                             i++
                         }
                     }
