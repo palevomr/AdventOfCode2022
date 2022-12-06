@@ -4,7 +4,7 @@ class Day4OverlappingIntervals {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            val file = File("/Users/edwardfedorow/IdeaProjects/AdventOfCode/src/main/resources/input_day_4")
+            val file = File("./src/main/resources/input_day_4")
 
             var counter = 0
             file.forEachLine {

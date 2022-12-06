@@ -5,7 +5,7 @@ class Day3RucksackProblem {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            val file = File("/Users/edwardfedorow/IdeaProjects/AdventOfCode/src/main/resources/input_day_3")
+            val file = File("./src/main/resources/input_day_3")
             var typeSum = 0
             var counter = 0
             var typeMap = Array(2) {

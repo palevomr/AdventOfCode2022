@@ -5,7 +5,7 @@ fun main(args: Array<String>) {
 }
 
 fun processDay2() {
-    val file = File("/Users/edwardfedorow/IdeaProjects/AdventOfCode/src/main/resources/input_day_2")
+    val file = File("./src/main/resources/input_day_2")
     val input = mutableListOf<Pair<GameVariant, Int>>()
     file.forEachLine {
         val parts = it.split(" ")
@@ -25,7 +25,7 @@ fun processDay2() {
 }
 
 fun processDay1(args: Array<String>) {
-    val file = File("/Users/edwardfedorow/IdeaProjects/AdventOfCode/src/main/resources/input_day_1")
+    val file = File("./src/main/resources/input_day_1")
     val input = mutableListOf<List<Int>>()
     val current = mutableListOf<Int>()
     file.forEachLine {

@@ -5,7 +5,7 @@ class Day5SupplyStack {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            val file = File("/Users/edwardfedorow/IdeaProjects/AdventOfCode/src/main/resources/input_day_5")
+            val file = File("./src/main/resources/input_day_5")
 
             val rows = mutableListOf<String>()
             file.forEachLine { rows.add(it) }
