@@ -1,4 +1,5 @@
 import java.io.File
+import java.util.PriorityQueue
 import java.util.Stack
 
 class Day7FileTree {
@@ -11,19 +12,18 @@ class Day7FileTree {
             val file = File("./src/main/resources/input_day_7")
             val stack = Stack<Folder>()
             var current: Folder? = null
-            var totalSize = 0
+            val pq = PriorityQueue<Int>() { a, b -> a - b }
             file.forEachLine {
                 when {
                     it.startsWith("\$ cd") -> {
                         val name = it.takeLastWhile { it != ' ' }
                         if (name == "..") {
                             val folderSize = stack.pop().totalValue
-                            if (folderSize < 100000) {
-                                totalSize += folderSize
-                            }
+                            pq.add(folderSize)
                             stack.peek().totalValue += folderSize
                         } else {
-                            val lastFolder = if (stack.isEmpty()) null else stack.peek().children.firstOrNull { it.name == name }
+                            val lastFolder =
+                                if (stack.isEmpty()) null else stack.peek().children.firstOrNull { it.name == name }
                             if (lastFolder == null) {
                                 stack.push(Folder(name, 0, ArrayList()))
                             } else {
@@ -31,12 +31,15 @@ class Day7FileTree {
                             }
                         }
                     }
+
                     it.startsWith("\$ ls") -> {
                         current = stack.peek()
                     }
+
                     it.startsWith("dir") -> {
                         current?.children?.add(Folder(it.takeLastWhile { it != ' ' }, 0, ArrayList()))
                     }
+
                     else -> {
                         val size = it.takeWhile { it != ' ' }.toInt()
                         current?.let {
@@ -46,17 +49,23 @@ class Day7FileTree {
                 }
             }
 
+            var totalSize = 0
             while (stack.isNotEmpty()) {
                 val folder = stack.pop()
                 val folderSize = folder.totalValue
-                if (folderSize < 100000) {
-                    totalSize += folderSize
-                }
-
+                if (folder.name == "/") totalSize = folderSize
+                pq.add(folderSize)
                 if (stack.isNotEmpty()) {
                     stack.peek().totalValue += folderSize
                 }
             }
+
+            val freeSize = TOTAL_SIZE - totalSize
+            var sizeAfterDeletion = freeSize + pq.poll()
+            while (sizeAfterDeletion < 30000000) {
+                sizeAfterDeletion = freeSize + pq.poll()
+            }
+            println("Smallest directory to delte - ${sizeAfterDeletion - freeSize}")
         }
     }
 }
