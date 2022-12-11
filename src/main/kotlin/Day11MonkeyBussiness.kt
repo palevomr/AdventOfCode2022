@@ -24,13 +24,13 @@ class Day11MonkeyBusiness {
     }
 
     fun startGame(rounds: Int = 20) {
+        val wrap = monkeys.map { it.testDivider }.reduce { acc, l -> acc * l }
         repeat(rounds) {
-            println("Round $it")
             monkeys.forEachIndexed { idx, monkey ->
                 while (monkey.items.isNotEmpty()) {
                     val current = monkey.items.poll()
                     val operationValue = monkey.operation(current)
-                    val operationValueDivided = operationValue / 3
+                    val operationValueDivided = operationValue % wrap
                     if (operationValueDivided % monkey.testDivider == 0L) {
                         monkeys[monkey.targetIfPositive].items.offer(operationValueDivided)
                     } else {
@@ -99,7 +99,7 @@ class Day11MonkeyBusiness {
                     }
                 }
             }
-            monkeyBusiness.startGame()
+            monkeyBusiness.startGame(10000)
             println(monkeyBusiness.calculateTopMonkeyBusiness())
         }
 
