@@ -40,14 +40,14 @@ class Day12HillClimber {
             BooleanArray(field[0].size)
         }
         val queue = PriorityQueue<Coordinates> { a, b -> a.steps - b.steps}
-        queue.offer(startPosition)
+        queue.offer(endPosition)
 
         while (queue.isNotEmpty()) {
             val current = queue.poll()
             if (visited[current.row][current.column]) continue
             visited[current.row][current.column] = true
 
-            if (current.row == endPosition.row && current.column == endPosition.column) {
+            if (field[current.row][current.column] == 'a') {
                 println(current.steps)
                 return current.steps
             }
@@ -56,7 +56,7 @@ class Day12HillClimber {
                 val newRow = current.row + it.first
                 val newCol = current.column + it.second
                 if (newRow in 0 until field.size && newCol in 0 until field[0].size
-                    && (field[newRow][newCol] - field[current.row][current.column] <= 1)
+                    && (field[current.row][current.column] - field[newRow][newCol] <= 1)
                 ) {
                     queue.offer(Coordinates(newRow, newCol, current.steps + 1))
                 }
