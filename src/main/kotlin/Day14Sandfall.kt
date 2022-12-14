@@ -14,6 +14,7 @@ class Day14Sandfall {
                     Coordinate(coordinates[0].toInt(), coordinates[1].toInt())
                 })
             }
+            sandfall.fillFloor()
             sandfall.startSandfall()
         }
     }
@@ -23,7 +24,7 @@ class Day14Sandfall {
     private val map = Array(200) {
         BooleanArray(1000)
     }
-    private var voidY = 0
+    private var floor = 0
 
     fun addPath(coordinates: List<Coordinate>) {
         var prev: Coordinate? = null
@@ -41,29 +42,39 @@ class Day14Sandfall {
             } ?: run {
                 map[current.y][current.x] = true
             }
-            voidY = Math.max(voidY, current.y)
+            floor = Math.max(floor, current.y)
             prev = current
+        }
+
+    }
+
+    fun fillFloor() {
+        floor += 2
+        println(floor)
+        for (i in 0 until map[0].size) {
+            map[floor][i] = true
         }
     }
 
     fun startSandfall() {
-        var counter = 0
+        var counter = 0L
         while (true) {
-            if (moveSandUnit(500, 0)) {
-                // some sand unit reached to max y
+            if (map[0][500]) {
                 break
-            } else {
-                counter++
             }
+            moveSandUnit(500, 0)
+            counter++
+        }
+        map.forEach {
+            println(it.map {
+                if (it) "#" else "."
+            }.joinToString(""))
         }
         println("Counter - $counter")
     }
 
-    private fun moveSandUnit(unitX: Int, unitY: Int): Boolean {
-        if (unitY == voidY) {
-            return true
-        }
-        return if (!map[unitY + 1][unitX]) {
+    private fun moveSandUnit(unitX: Int, unitY: Int) {
+        if (!map[unitY + 1][unitX]) {
             moveSandUnit(unitX, unitY + 1)
         } else if (!map[unitY + 1][unitX - 1]) {
             moveSandUnit(unitX - 1, unitY + 1)
@@ -71,7 +82,6 @@ class Day14Sandfall {
             moveSandUnit(unitX + 1, unitY + 1)
         } else {
             map[unitY][unitX] = true
-            false
         }
 
     }
