@@ -19,8 +19,6 @@ class Day14Sandfall {
         }
     }
 
-    data class Coordinate(var x: Int, var y: Int)
-
     private val map = Array(200) {
         BooleanArray(1000)
     }
