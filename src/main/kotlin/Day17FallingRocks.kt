@@ -33,31 +33,44 @@ class Day17FallingRocks(
     private var patternCount = 0
     private var currentRow = HEIGHT
 
+    private var saveRow = 0
+    private var saveCount = 0L
+    private var heightToAdd = 0L
+
     fun simulate(target: Long) {
+        fun dropRock() {
+            val figure = figures[(figureCount++ % figures.size).toInt()].applySpawningPoint(currentRow)
+            while (true) {
+                if (patternCount == jetPattern.size / 2) {
+                    saveRow = currentRow
+                    saveCount = figureCount
+                } else if (patternCount == (jetPattern.size / 2) * 3) {
+                    val rockDiff = figureCount - saveCount
+                    val factor = (target - saveCount) / rockDiff
+                    figureCount = saveCount + factor * rockDiff
+                    heightToAdd = (saveRow - currentRow) * (factor - 1)
+                }
+                val pattern = jetPattern[patternCount % jetPattern.size].also { patternCount++ }
+                if (pattern < 0) figure.moveLeft(taken)
+                else if (pattern > 0) figure.moveRight(taken)
+                if (figure.canFall(taken)) figure.fall()
+                else {
+                    // settle down
+                    figure.coordinates.forEach {
+                        taken[it] = true
+                    }
+                    currentRow = minOf(currentRow, figure.coordinates.min() / WIDTH)
+                    break
+                }
+            }
+        }
         while (figureCount < target) {
             dropRock()
         }
     }
-    private fun dropRock() {
-        val figure = figures[(figureCount++ % figures.size).toInt()].applySpawningPoint(currentRow)
-        while (true) {
-            val pattern = jetPattern[patternCount % jetPattern.size].also { patternCount++ }
-            if (pattern < 0) figure.moveLeft(taken)
-            else if (pattern > 0) figure.moveRight(taken)
-            if (figure.canFall(taken)) figure.fall()
-            else {
-                // settle down
-                figure.coordinates.forEach {
-                    taken[it] = true
-                }
-                currentRow = minOf(currentRow, figure.coordinates.min() / WIDTH)
-                break
-            }
-        }
-    }
 
-    fun getCurrentHeight(): Int {
-        return HEIGHT - currentRow
+    fun getCurrentHeight(): Long {
+        return HEIGHT - currentRow + heightToAdd
     }
 
     class Figure(val coordinates: IntArray) {
