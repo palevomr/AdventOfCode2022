@@ -21,7 +21,7 @@ class UnstableDiffusion {
                     }
                 }
             }
-            unstableDiffusion.simulate(10)
+            unstableDiffusion.part2()
             unstableDiffusion.printMap(unstableDiffusion.set)
         }
     }
@@ -32,7 +32,22 @@ class UnstableDiffusion {
         set.add(Coordinate(row, col))
     }
 
-    fun simulate(times: Int) {
+    fun part2() {
+        var directions = DIRECTIONS.toList()
+        var rounds = 1
+        while (true) {
+            val newSet = move(directions)
+            if (set == newSet) {
+                println("Round - $rounds")
+                break
+            }
+            set = newSet
+            directions = directions.takeLast(3) + directions.take(1)
+            rounds++
+        }
+    }
+
+    fun part1(times: Int) {
         var directions = DIRECTIONS.toList()
         for (i in 0 until times) {
             val newSet = move(directions)
@@ -47,7 +62,6 @@ class UnstableDiffusion {
         val colMax = set.maxOf { it.y }
         val space = (rowMax + 1 - rowMin) * (colMax + 1 - colMin)
         println("Free area = ${space - set.size}")
-
     }
 
     fun printMap(set: Set<Coordinate>) {
